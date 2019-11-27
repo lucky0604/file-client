@@ -1,6 +1,6 @@
 import wx
 import os, shutil
-
+import pandas as pd
 
 class MyTextDropTarget(wx.TextDropTarget):
     def __init__(self, object):
@@ -13,7 +13,7 @@ class MyTextDropTarget(wx.TextDropTarget):
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, id, title):
-        wx.Frame.__init__(self, parent, id, title, size=(700, 600))
+        wx.Frame.__init__(self, parent, id, title, size=(800, 600))
 
         splitter1 = wx.SplitterWindow(self, -1)
         splitter2 = wx.SplitterWindow(splitter1)
@@ -28,7 +28,7 @@ class MyFrame(wx.Frame):
         self.lc1 = wx.ListCtrl(splitter2, -1, style=wx.LC_LIST)
         wx.EVT_LIST_BEGIN_DRAG(self, self.lc1.GetId(), self.OnDragInit)
         tree = self.dir.GetTreeCtrl()
-        splitter1.SplitVertically(self.dir, splitter2, 100)
+        splitter1.SplitVertically(self.dir, splitter2, 200)
         splitter2.SplitVertically(self.lc1, splitter3, 200)
         self.textKey = wx.StaticText(splitter3, -1, 'Total: ', (20, 60))
         self.textValue = wx.StaticText(splitter3, -1, 'Total: ', (20, 80))
@@ -67,12 +67,22 @@ class MyFrame(wx.Frame):
     def export(self, event):
         list = os.listdir(self.dir.GetPath())
         export_file_name = self.file_name_value.GetValue()
-        print(list, ' ------- export file name ---------')
         os.mkdir(self.dir.GetPath() + '/' + export_file_name)
         file_num = self.picNum.GetValue()
-        print(file_num, ' -------- file num --------')
-        for file in range(int(file_num)):
-            shutil.move(self.dir.GetPath() + '/' + list[file], self.dir.GetPath() + '/' + export_file_name)
+        
+        if os.path.exists(self.dir.GetPath() + '/' + 'result.xlsx'):
+            df1 = pd.DataFrame({'Filename': list, '': None, 'Status': None})
+            df1.to_excel(self.dir.GetPath() + '/' + 'result.xlsx', sheet_name = 'Sheet1', startcol = 0, index =True)
+            excel_file_name = pd.read_excel(self.dir.GetPath() + '/' + 'result.xlsx')
+            # print(excel_file_name['Filename'], ' --------------- file name--------------')
+            for file in range(int(file_num)):
+                shutil.move(self.dir.GetPath() + '/' + list[file], self.dir.GetPath() + '/' + export_file_name)
+                if  list[file] in excel_file_name['Filename']:
+                    
+                    df1.loc[df1[df1['Filename'].isin([list[file]])][['Status']].index[0]]['Status'] = 'Sending'
+                    
+        else:
+            os.mknod(self.dir.GetPath() + '/' + 'result.xlsx')
 
 
 class MyApp(wx.App):
