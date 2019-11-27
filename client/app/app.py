@@ -71,18 +71,21 @@ class MyFrame(wx.Frame):
         file_num = self.picNum.GetValue()
         
         if os.path.exists(self.dir.GetPath() + '/' + 'result.xlsx'):
-            df1 = pd.DataFrame({'Filename': list, '': None, 'Status': None})
-            df1.to_excel(self.dir.GetPath() + '/' + 'result.xlsx', sheet_name = 'Sheet1', startcol = 0, index =True)
-            excel_file_name = pd.read_excel(self.dir.GetPath() + '/' + 'result.xlsx')
+            
+            
             # print(excel_file_name['Filename'], ' --------------- file name--------------')
-            for file in range(int(file_num)):
-                shutil.move(self.dir.GetPath() + '/' + list[file], self.dir.GetPath() + '/' + export_file_name)
-                if  list[file] in excel_file_name['Filename']:
-                    
-                    df1.loc[df1[df1['Filename'].isin([list[file]])][['Status']].index[0]]['Status'] = 'Sending'
+            
                     
         else:
             os.mknod(self.dir.GetPath() + '/' + 'result.xlsx')
+            df1 = pd.DataFrame({'Filename': list, '': None, 'Status': None})
+            
+            excel_file_name = pd.read_excel(self.dir.GetPath() + '/' + 'result.xlsx')
+            for file in range(int(file_num)):
+                shutil.move(self.dir.GetPath() + '/' + list[file], self.dir.GetPath() + '/' + export_file_name)
+                if  list[file] in excel_file_name['Filename']:
+                    df1.loc[df1[df1['Filename'].isin([list[file]])][['Status']].index[0]]['Status'] = 'Sending'
+                    
 
 
 class MyApp(wx.App):
