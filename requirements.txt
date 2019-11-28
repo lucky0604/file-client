@@ -8,7 +8,6 @@ numpy==1.17.4
 openpyxl==3.0.2
 pandas==0.25.3
 Pillow==6.2.1
-pkg-resources==0.0.0
 pycodestyle==2.5.0
 pyflakes==2.1.1
 pygeoip==0.3.2
@@ -16,6 +15,8 @@ python-dateutil==2.8.1
 python-magic==0.4.15
 pytz==2019.3
 six==1.13.0
+tqdm==4.39.0
 windnd==1.0.5
 wxPython==4.0.7.post2
 xlrd==1.2.0
+yapf==0.29.0
