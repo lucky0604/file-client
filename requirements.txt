@@ -4,7 +4,7 @@ eyeD3==0.8.11
 flake8==3.7.9
 jdcal==1.4.1
 mccabe==0.6.1
-numpy==1.17.4
+numpy==1.22.0
 openpyxl==3.0.2
 pandas==0.25.3
 Pillow==6.2.1
